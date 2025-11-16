@@ -96,31 +96,49 @@
 
     <script>
         (function () {
+            const CONFIG = {
+                jailCount: 4,
+                freeCount: 17,
+                jailPrefix: 'jail',
+                freePrefix: 'free',
+                imageExt: '.jpg',
+                imagesFolder: './jailimages/'
+            };
+
+            const generateImageList = (prefix, count) => {
+                return Array.from({ length: count }, (_, i) => 
+                    `${CONFIG.imagesFolder}${prefix}${i}${CONFIG.imageExt}`
+                );
+            };
+
+            const getRandomImage = (images) => {
+                const lastImage = sessionStorage.getItem('lastCatImage');
+                let imgPath;
+                
+                if (images.length === 1) {
+                    imgPath = images[0];
+                } else {
+                    do {
+                        imgPath = images[Math.floor(Math.random() * images.length)];
+                    } while (imgPath === lastImage);
+                }
+                
+                sessionStorage.setItem('lastCatImage', imgPath);
+                return imgPath;
+            };
+
             const inJail = Math.random() < 0.5;
-
-            const jailImages = [
-                'jailimages/jail1.png',
-                'jailimages/jail2.png',
-                'jailimages/jail3.png'
-            ];
-
-            const freeImages = [
-                'jailimages/free1.png',
-                'jailimages/free2.png',
-                'jailimages/free3.png',
-                'jailimages/free4.png'
-            ];
-
-            const images = inJail ? jailImages : freeImages;
-            const imgPath = images[Math.floor(Math.random() * images.length)];
+            const images = inJail 
+                ? generateImageList(CONFIG.jailPrefix, CONFIG.jailCount)
+                : generateImageList(CONFIG.freePrefix, CONFIG.freeCount);
+            
+            const imgPath = getRandomImage(images);
 
             const imgEl = document.getElementById('cat-img');
             const msgEl = document.getElementById('cat-message');
             const statusEl = document.getElementById('cat-status');
 
-            imgEl.addEventListener('load', () => {
-                imgEl.classList.add('loaded');
-            });
+            imgEl.addEventListener('load', () => imgEl.classList.add('loaded'), { once: true });
 
             imgEl.src = imgPath;
             imgEl.alt = `Cat ${inJail ? 'in jail' : 'is free'}`;
@@ -134,7 +152,6 @@
                 statusEl.classList.add('yes');
             } else {
                 statusEl.textContent = '';
-                statusEl.classList.remove('yes');
             }
         })();
     </script>

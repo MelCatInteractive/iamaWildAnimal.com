@@ -6,35 +6,62 @@
   <title>WildAnimal</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #000; color: #fff; height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #000; color: #fff; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
     .page-title { padding: 1rem 2.5rem 0.4rem; flex-shrink: 0; }
-    .page-title h1 { font-size: 1.75rem; font-weight: 300; letter-spacing: 0.1em; text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 50px rgba(255, 255, 255, 0.7), 0 0 70px rgba(255, 255, 255, 0.5), 0 0 90px rgba(255, 255, 255, 0.3); }
-    .page-title h1 a { color: #fff; text-decoration: none; display: inline-block; transition: all 0.3s ease; }
-    .page-title h1 a:hover { transform: scale(1.05); text-shadow: 0 0 20px #fff, 0 0 35px #fff, 0 0 50px rgba(255, 255, 255, 0.9), 0 0 25px #9146ff, 0 0 40px #9146ff, 0 0 55px #9146ff, 0 0 70px #9146ff, 0 0 90px rgba(145, 70, 255, 0.9), 0 0 110px rgba(145, 70, 255, 0.8), 0 0 140px rgba(145, 70, 255, 0.7), 0 0 170px rgba(145, 70, 255, 0.5); animation: wiggle 3.2s ease-in-out infinite; }
-    @keyframes wiggle { 0%, 12%, 30%, 45%, 68%, 78%, 100% { transform: scale(1.05) rotate(0deg); } 3% { transform: scale(1.05) rotate(-0.6deg); } 6% { transform: scale(1.05) rotate(0.4deg); } 9% { transform: scale(1.05) rotate(-0.5deg); } 33% { transform: scale(1.05) rotate(0.7deg); } 36% { transform: scale(1.05) rotate(-0.4deg); } 39% { transform: scale(1.05) rotate(0.6deg); } 42% { transform: scale(1.05) rotate(-0.3deg); } 70% { transform: scale(1.05) rotate(-0.5deg); } 72% { transform: scale(1.05) rotate(0.8deg); } 74% { transform: scale(1.05) rotate(-0.6deg); } 76% { transform: scale(1.05) rotate(0.4deg); } }
+    .page-title h1 { font-size: 1.75rem; font-weight: 300; letter-spacing: 0.1em; }
+    .page-title h1 a { color:#fff; text-decoration:none; display:inline-block; text-shadow:0 0 0 rgba(255,255,255,0); transition:text-shadow 0.3s ease,transform 0.3s ease; }
+    .page-title h1 a:hover { transform:scale(1.04); text-shadow:0 0 20px rgba(255,255,255,1),0 0 40px rgba(255,255,255,1),0 0 80px rgba(255,255,255,0.9); }
     main { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; padding-top: 1rem; }
-    #gallery { display: flex; flex-direction: column; height: 100%; gap: 0rem; }
+    #gallery { display: flex; flex-direction: column; height: 100%; }
     .loading { display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 1rem; }
     .spinner { width: 2rem; height: 2rem; border: 2px solid rgba(255, 255, 255, 0.1); border-top-color: rgba(255, 255, 255, 0.4); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .scroll-section { opacity: 0; animation: fadeIn 0.8s ease forwards; perspective: 1200px; flex: 1; display: flex; align-items: center; position: relative; min-height: 0; overflow: visible; }
+    .scroll-section { opacity: 0; animation: fadeIn 0.8s ease forwards; flex: 1; display: flex; align-items: center; position: relative; min-height: 0; overflow: visible; }
     .scroll-section:nth-child(1) { animation-delay: 0.1s; }
     .scroll-section:nth-child(2) { animation-delay: 0.2s; }
     .scroll-section:nth-child(3) { animation-delay: 0.3s; }
     @keyframes fadeIn { to { opacity: 1; } }
-    .scroll-container { display: flex; gap: 1rem; padding: 0 2.5rem; overflow: visible; height: 100%; width: 100%; align-items: center; }
-    .scroll-wrapper { display: flex; width: fit-content; animation: infiniteScroll 120s linear infinite; transform-style: preserve-3d; height: 100%; align-items: center; }
+    .scroll-container, .scroll-wrapper, .image-card, .card-inner { display: flex; align-items: center; height: 100%; }
+    .scroll-container { gap: 1rem; padding: 0 2.5rem; overflow: visible; width: 100%; }
+    .scroll-wrapper { 
+      width: fit-content; 
+      animation: infiniteScroll 120s linear infinite; 
+      will-change: transform; 
+      backface-visibility: hidden;
+    }
     .scroll-wrapper:hover { animation-play-state: paused; }
-    @keyframes infiniteScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    .image-card { flex: 0 0 auto; position: relative; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.4, 0.25, 1); transform-style: preserve-3d; height: 100%; display: flex; align-items: center; }
-    .image-card:hover { transform: translateY(-12px); z-index: 100; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)); }
-    .card-inner { overflow: hidden; background-color: rgba(255, 255, 255, 0.03); border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.05); transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.25, 0.4, 0.25, 1); height: 100%; display: flex; align-items: center; }
-    .image-card:nth-child(4n+1) .card-inner { transform: rotateY(-2deg); }
-    .image-card:nth-child(4n+2) .card-inner { transform: rotateY(1deg); }
-    .image-card:nth-child(4n+3) .card-inner { transform: rotateY(-1deg); }
-    .image-card:nth-child(4n+4) .card-inner { transform: rotateY(2deg); }
-    .image-card:hover .card-inner { transform: rotateY(0deg); }
-    .image-card img { height: 100%; width: auto; display: block; transition: transform 0.6s cubic-bezier(0.25, 0.4, 0.25, 1); }
+    @keyframes infiniteScroll { 
+      0% { transform: translate3d(0, 0, 0); } 
+      100% { transform: translate3d(-50%, 0, 0); } 
+    }
+    .image-card { 
+      flex: 0 0 auto; 
+      position: relative; 
+      cursor: pointer; 
+      transition: transform 0.4s cubic-bezier(0.25, 0.4, 0.25, 1), filter 0.4s ease;
+      backface-visibility: hidden;
+    }
+    .image-card:hover { 
+      transform: translateY(-12px); 
+      z-index: 9999; 
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)); 
+    }
+    .card-inner { 
+      overflow: hidden; 
+      background-color: rgba(255, 255, 255, 0.03); 
+      border-radius: 4px; 
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backface-visibility: hidden;
+    }
+    .image-card img { 
+      height: 100%; 
+      width: auto; 
+      display: block; 
+      transition: opacity 0.3s ease; 
+      opacity: 0;
+      backface-visibility: hidden;
+    }
+    .image-card img.loaded { opacity: 1; }
     .modal { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; padding: 2rem; opacity: 0; transition: opacity 0.3s ease; }
     .modal.active { display: flex; opacity: 1; }
     .modal-backdrop { position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.95); backdrop-filter: blur(12px); }
@@ -44,6 +71,7 @@
     .modal-content { position: relative; max-width: 90vw; max-height: 90vh; transform: scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.4, 0.25, 1); }
     .modal.active .modal-content { transform: scale(1); opacity: 1; }
     .modal-content img { max-width: 100%; max-height: 90vh; width: auto; height: auto; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+    .modal-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     @media (max-width: 768px) { .scroll-container { gap: 0.75rem; padding: 0 1rem; } }
   </style>
 </head>
@@ -60,51 +88,138 @@
   </main>
   <div id="modal" class="modal">
     <div class="modal-backdrop"></div>
-    <button class="modal-close" id="modal-close">
+    <button class="modal-close" id="modal-close" aria-label="Close">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
-    <div class="modal-content"><img id="modal-image" src="" alt=""></div>
+    <div class="modal-content">
+      <div class="modal-loading spinner" style="display: none;"></div>
+      <img id="modal-image" src="" alt="">
+    </div>
   </div>
   <script>
-    const IMAGE_LIST = ['image.png','image1.png','image2.png','image3.png','image4.png','image5.png','image6.png','image7.png','image8.png','image9.png','image10.png','image11.png','image12.png','image13.png','image14.png','image15.png','image16.png','image17.png'];
-    const IMAGES_FOLDER = './images/';
-    const loading = document.getElementById('loading');
-    const gallery = document.getElementById('gallery');
+    const CONFIG = {
+      totalImages: 361,
+      startIndex: 0,
+      imagePrefix: 'jpg_image',
+      imageExt: '.jpg',
+      thumbnailFolder: './thumbnail/',
+      imagesFolder: './images/',
+      rowAnimations: [
+        { duration: '550s', direction: 'normal' },
+        { duration: '710s', direction: 'reverse' },
+        { duration: '630s', direction: 'normal' }
+      ]
+    };
+
+    const shuffleArray = arr => {
+      const shuffled = [...arr];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    const getFileName = (index) => `${CONFIG.imagePrefix}${CONFIG.startIndex + index}${CONFIG.imageExt}`;
+
     const modal = document.getElementById('modal');
     const modalImage = document.getElementById('modal-image');
+    const modalLoading = document.querySelector('.modal-loading');
+    
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      modalImage.src = '';
+    };
 
-    function renderGallery() {
-      const images = IMAGE_LIST.map(f => ({url: IMAGES_FOLDER + f, name: f}));
-      const shuffled = [...images].sort(() => Math.random() - 0.5);
-      const third = Math.ceil(shuffled.length / 3);
-      const rows = [shuffled.slice(0, third), shuffled.slice(third, third * 2), shuffled.slice(third * 2)];
+    const openModalWithFullImage = (fileName) => {
+      const fullImageUrl = `${CONFIG.imagesFolder}${fileName}`;
       
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      modalLoading.style.display = 'block';
+      modalImage.style.opacity = '0';
+      
+      const img = new Image();
+      img.onload = () => {
+        modalImage.src = fullImageUrl;
+        modalImage.style.opacity = '1';
+        modalLoading.style.display = 'none';
+      };
+      img.onerror = () => {
+        modalLoading.style.display = 'none';
+        console.error('Failed to load full image:', fullImageUrl);
+      };
+      img.src = fullImageUrl;
+    };
+
+    const renderGallery = () => {
+      const loading = document.getElementById('loading');
+      const gallery = document.getElementById('gallery');
+      
+      const imageIndices = Array.from({ length: CONFIG.totalImages }, (_, i) => i);
+      
+      const rows = Array.from({ length: 3 }, (_, i) => {
+        const start = i * Math.ceil(CONFIG.totalImages / 3);
+        const end = start + Math.ceil(CONFIG.totalImages / 3);
+        return shuffleArray(imageIndices).slice(start, end);
+      });
+
+      gallery.innerHTML = rows.map(rowIndices => {
+        const cards = rowIndices.map((index) => {
+          const fileName = getFileName(index);
+          const thumbnailUrl = `${CONFIG.thumbnailFolder}${fileName}`;
+          return `
+            <div class="image-card" data-filename="${fileName}">
+              <div class="card-inner">
+                <img src="${thumbnailUrl}" alt="" loading="lazy" decoding="async">
+              </div>
+            </div>
+          `;
+        }).join('');
+        return `
+          <div class="scroll-section">
+            <div class="scroll-container">
+              <div class="scroll-wrapper">${cards}${cards}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.scroll-wrapper').forEach((wrapper, i) => {
+        const { duration, direction } = CONFIG.rowAnimations[i % CONFIG.rowAnimations.length];
+        wrapper.style.cssText = `animation-duration: ${duration}; animation-direction: ${direction}`;
+      });
+
+      gallery.addEventListener('click', e => {
+        const card = e.target.closest('.image-card');
+        if (card) {
+          openModalWithFullImage(card.dataset.filename);
+        }
+      });
+
+      [document.getElementById('modal-close'), modal.querySelector('.modal-backdrop')].forEach(el => 
+        el.addEventListener('click', closeModal)
+      );
+      
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      modalImage.addEventListener('click', e => e.stopPropagation());
+      
+      gallery.querySelectorAll('img').forEach(img => {
+        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+        img.addEventListener('error', () => img.closest('.image-card').style.display = 'none', { once: true });
+      });
+
       loading.style.display = 'none';
       gallery.style.display = 'flex';
-      gallery.innerHTML = rows.map(imgs => {
-        if (!imgs.length) return '';
-        const cards = imgs.map(img => `<div class="image-card" data-url="${img.url}"><div class="card-inner"><img src="${img.url}" alt="${img.name}" loading="lazy"></div></div>`).join('');
-        return `<div class="scroll-section"><div class="scroll-container"><div class="scroll-wrapper">${cards}${cards}</div></div></div>`;
-      }).join('');
-      
-      document.querySelectorAll('.scroll-wrapper').forEach((w, i) => {
-        const configs = [['60s', 'normal'], ['100s', 'reverse'], ['80s', 'normal']];
-        w.style.animationDuration = configs[i][0];
-        w.style.animationDirection = configs[i][1];
-      });
-      
-      document.querySelectorAll('.image-card').forEach(card => card.addEventListener('click', () => {
-        modalImage.src = card.dataset.url;
-        modal.classList.add('active');
-      }));
-    }
+    };
 
-    document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('active'));
-    modal.querySelector('.modal-backdrop').addEventListener('click', () => modal.classList.remove('active'));
-    document.addEventListener('keydown', e => e.key === 'Escape' && modal.classList.contains('active') && modal.classList.remove('active'));
-    modalImage.addEventListener('click', e => e.stopPropagation());
     renderGallery();
   </script>
 </body>

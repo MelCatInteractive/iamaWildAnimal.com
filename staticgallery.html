@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WildAnimal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background-color: #000; 
+      color: #fff; 
+      overflow-x: hidden;
+    }
+    
+    .page-title { 
+      padding: 1.5rem 2rem; 
+      text-align: center;
+    }
+    .page-title h1 { 
+      font-size: 1.75rem; 
+      font-weight: 300; 
+      letter-spacing: 0.1em; 
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    }
+    .page-title h1 a { 
+      color: #fff; 
+      text-decoration: none; 
+      transition: text-shadow 0.3s ease;
+    }
+    .page-title h1 a:hover { 
+      text-shadow: 0 0 40px #fff, 0 0 60px #9146ff;
+    }
+    
+    .loading { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      height: 50vh; 
+      flex-direction: column; 
+      gap: 1rem; 
+    }
+    .spinner { 
+      width: 2rem; 
+      height: 2rem; 
+      border: 2px solid rgba(255, 255, 255, 0.1); 
+      border-top-color: rgba(255, 255, 255, 0.4); 
+      border-radius: 50%; 
+      animation: spin 1s linear infinite; 
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+    
+    .image-card { 
+      position: relative;
+      aspect-ratio: 16/9;
+      cursor: pointer; 
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .image-card:hover { 
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+    }
+    
+    .image-card img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      display: block; 
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .image-card img.loaded { opacity: 1; }
+    
+    .modal { 
+      position: fixed; 
+      inset: 0; 
+      z-index: 50; 
+      display: none; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 2rem; 
+    }
+    .modal.active { display: flex; }
+    
+    .modal-backdrop { 
+      position: absolute; 
+      inset: 0; 
+      background-color: rgba(0, 0, 0, 0.95); 
+      backdrop-filter: blur(12px); 
+    }
+    
+    .modal-close { 
+      position: absolute; 
+      top: 2rem; 
+      right: 2rem; 
+      z-index: 10; 
+      padding: 0.5rem; 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      border-radius: 4px; 
+      color: rgba(255, 255, 255, 0.6); 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+    }
+    .modal-close:hover { 
+      background: rgba(255, 255, 255, 0.1); 
+      color: #fff; 
+    }
+    .modal-close svg { 
+      width: 1.5rem; 
+      height: 1.5rem; 
+      display: block; 
+    }
+    
+    .modal-content { 
+      position: relative; 
+      max-width: 90vw; 
+      max-height: 90vh; 
+    }
+    .modal-content img { 
+      max-width: 100%; 
+      max-height: 90vh; 
+      width: auto; 
+      height: auto; 
+      object-fit: contain; 
+      border-radius: 4px; 
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); 
+    }
+    
+    .modal-loading { 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+    }
+    
+    @media (max-width: 768px) { 
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .page-title { padding: 1rem; }
+      .page-title h1 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-title">
+    <h1><a href="https://www.twitch.tv/iamawildanimal" target="_blank" rel="noopener noreferrer">iamaWildAnimal.tv</a></h1>
+  </div>
+  
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p style="color: rgba(255,255,255,0.4); font-size: 0.875rem;">Loading collection...</p>
+  </div>
+  
+  <div id="gallery" class="gallery-grid" style="display: none;"></div>
+  
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop"></div>
+    <button class="modal-close" id="modal-close" aria-label="Close modal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <div class="modal-content">
+      <div class="modal-loading spinner" style="display: none;"></div>
+      <img id="modal-image" src="" alt="">
+    </div>
+  </div>
+  
+  <script>
+    const CONFIG = {
+      totalImages: 361,
+      startIndex: 0,
+      imagePrefix: 'jpg_image',
+      imageExt: '.jpg',
+      thumbnailFolder: './thumbnail/',
+      imagesFolder: './images/'
+    };
+
+    const getFileName = (index) => `${CONFIG.imagePrefix}${CONFIG.startIndex + index}${CONFIG.imageExt}`;
+
+    const shuffleArray = (array) => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    const createImageCard = (fileName) => {
+      const card = document.createElement('div');
+      card.className = 'image-card';
+      card.dataset.filename = fileName;
+      
+      const img = document.createElement('img');
+      img.src = CONFIG.thumbnailFolder + fileName;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      
+      img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+      img.addEventListener('error', () => card.style.display = 'none', { once: true });
+      
+      card.appendChild(img);
+      return card;
+    };
+
+    const modal = document.getElementById('modal');
+    const modalImage = document.getElementById('modal-image');
+    const modalClose = document.getElementById('modal-close');
+    const modalBackdrop = modal.querySelector('.modal-backdrop');
+    const modalLoading = document.querySelector('.modal-loading');
+
+    const openModal = (fileName) => {
+      const fullImageUrl = CONFIG.imagesFolder + fileName;
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      modalLoading.style.display = 'block';
+      modalImage.style.opacity = '0';
+      
+      const img = new Image();
+      img.onload = () => {
+        modalImage.src = fullImageUrl;
+        modalImage.style.opacity = '1';
+        modalLoading.style.display = 'none';
+      };
+      img.onerror = () => {
+        modalLoading.style.display = 'none';
+        console.error('Failed to load full image:', fullImageUrl);
+      };
+      img.src = fullImageUrl;
+    };
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      modalImage.src = '';
+    };
+
+    const renderGallery = () => {
+      const loading = document.getElementById('loading');
+      const gallery = document.getElementById('gallery');
+      
+      const imageIndices = Array.from({ length: CONFIG.totalImages }, (_, i) => i);
+      const shuffled = shuffleArray(imageIndices);
+      
+      const fragment = document.createDocumentFragment();
+      shuffled.forEach(index => {
+        const fileName = getFileName(index);
+        fragment.appendChild(createImageCard(fileName));
+      });
+      
+      gallery.appendChild(fragment);
+      
+      gallery.addEventListener('click', (e) => {
+        const card = e.target.closest('.image-card');
+        if (card) openModal(card.dataset.filename);
+      });
+
+      [modalClose, modalBackdrop].forEach(el => el.addEventListener('click', closeModal));
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      modalImage.addEventListener('click', (e) => e.stopPropagation());
+      
+      loading.style.display = 'none';
+      gallery.style.display = 'grid';
+    };
+
+    renderGallery();
+  </script>
+</body>
+</html>
