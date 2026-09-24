@@ -1,142 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WildAnimal</title>
-  <link rel="stylesheet" href="shared.css">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #000; color: #fff; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
-    .page-title { padding: 1rem 2.5rem 0.4rem; flex-shrink: 0; }
-    .page-title h1 { font-size: 1.75rem; font-weight: 300; letter-spacing: 0.1em; }
-    .page-title h1 a { color:#fff; text-decoration:none; display:inline-block; text-shadow:0 0 0 rgba(255,255,255,0); transition:text-shadow 0.3s ease,transform 0.3s ease; }
-    .page-title h1 a:hover { transform:scale(1.04); text-shadow:0 0 20px rgba(255,255,255,1),0 0 40px rgba(255,255,255,1),0 0 80px rgba(255,255,255,0.9); }
-    main { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; padding-top: 1rem; }
-    #gallery { display: flex; flex-direction: column; height: 100%; }
-    .loading { display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 1rem; }
-    .scroll-section { opacity: 0; animation: fadeIn 0.8s ease forwards; flex: 1; display: flex; align-items: center; position: relative; min-height: 0; overflow: visible; }
-    .scroll-section:nth-child(1) { animation-delay: 0.1s; }
-    .scroll-section:nth-child(2) { animation-delay: 0.2s; }
-    .scroll-section:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes fadeIn { to { opacity: 1; } }
-    .scroll-container, .scroll-wrapper, .image-card, .card-inner { display: flex; align-items: center; height: 100%; }
-    .scroll-container { gap: 1rem; padding: 0 2.5rem; overflow: visible; width: 100%; }
-    .scroll-wrapper {
-      width: fit-content;
-      animation: infiniteScroll 120s linear infinite;
-      will-change: transform;
-      backface-visibility: hidden;
-    }
-    .scroll-wrapper:hover { animation-play-state: paused; }
-    @keyframes infiniteScroll {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-50%, 0, 0); }
-    }
-    .image-card {
-      flex: 0 0 auto;
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.4s cubic-bezier(0.25, 0.4, 0.25, 1), filter 0.4s ease;
-      backface-visibility: hidden;
-    }
-    .image-card:hover {
-      transform: translateY(-12px);
-      z-index: 9999;
-      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
-    }
-    .card-inner {
-      overflow: hidden;
-      background-color: rgba(255, 255, 255, 0.03);
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      backface-visibility: hidden;
-    }
-    .image-card img {
-      height: 100%;
-      width: auto;
-      display: block;
-      transition: opacity 0.3s ease;
-      opacity: 0;
-      backface-visibility: hidden;
-    }
-    .image-card img.loaded { opacity: 1; }
-    @media (max-width: 768px) { .scroll-container { gap: 0.75rem; padding: 0 1rem; } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iamaWildAnimal</title>
+<meta name="description" content="361 We'll Be Right Back screens from the iamaWildAnimal Twitch stream.">
+<meta name="theme-color" content="#070707">
+<link rel="canonical" href="https://www.iamawildanimal.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="iamaWildAnimal">
+<meta property="og:description" content="361 We'll Be Right Back screens.">
+<meta property="og:url" content="https://www.iamawildanimal.com/">
+<meta property="og:image" content="https://www.iamawildanimal.com/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<script src="data/screens.js"></script>
+<script type="module" src="site.js"></script>
 </head>
 <body>
-  <div class="page-title">
-    <h1><a href="https://www.twitch.tv/iamawildanimal" target="_blank" rel="noopener noreferrer">iamaWildAnimal.tv</a></h1>
-  </div>
-  <main>
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      <p style="color: rgba(255,255,255,0.4); font-size: 0.875rem;">Loading collection...</p>
+<div class="boot" aria-hidden="true"><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor hide" aria-hidden="true"><span>Open</span></div>
+
+<header class="top">
+  <a class="mark" href="./">iamaWildAnimal</a>
+  <div class="clock" id="clock" aria-hidden="true">00:00:00</div>
+  <nav aria-label="Site">
+    <a href="#archive">Archive</a>
+    <a href="iscatinjail.html">Is cat in jail?</a>
+    <a href="https://www.twitch.tv/iamawildanimal" target="_blank" rel="noopener">Twitch<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 9 9 1M3 1h6v6"/></svg></a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="hero" aria-label="Featured screen">
+    <canvas id="signal" aria-hidden="true"></canvas>
+    <img class="fallback" id="hero-fallback" alt="" aria-hidden="true">
+    <button class="hero-open" id="hero-open" data-cursor="Open"><span>Open the featured screen</span></button>
+    <h1 class="hero-title"><span class="ln"><span>We'll</span></span><span class="ln"><span>be right</span></span><span class="ln"><span>back</span></span></h1>
+    <div class="hero-meta">
+      <div><span class="lbl">Screen</span><span class="num" id="hero-num">000</span><span class="of">/ 361</span></div>
+      <div class="nextwrap"><span class="lbl">Next</span><div class="bar"><i id="hero-bar"></i></div></div>
     </div>
-    <div id="gallery" style="display: none;"></div>
-  </main>
-  <script src="shared.js"></script>
-  <script>
-    const ROW_ANIMATIONS = [
-      { duration: '550s', direction: 'normal' },
-      { duration: '710s', direction: 'reverse' },
-      { duration: '630s', direction: 'normal' }
-    ];
+    <div class="scroll-cue" aria-hidden="true"></div>
+  </section>
 
-    const renderGallery = () => {
-      const loading = document.getElementById('loading');
-      const gallery = document.getElementById('gallery');
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 
-      const shuffled = shuffleArray(
-        Array.from({ length: GALLERY_CONFIG.totalImages }, (_, i) => i)
-      );
-      Modal.setItems(shuffled.map(getFileName));
-      const perRow = Math.ceil(GALLERY_CONFIG.totalImages / 3);
-      const rows = Array.from({ length: 3 }, (_, i) =>
-        shuffled.slice(i * perRow, i * perRow + perRow)
-      );
+  <section class="reels" id="reels" aria-label="Screens">
+    <div class="reels-tag"><span>Drag to scrub</span><span>361 screens</span></div>
+    <div class="reel" data-dir="1"></div>
+    <div class="reel" data-dir="-1"></div>
+    <div class="reel" data-dir="1"></div>
+  </section>
 
-      gallery.innerHTML = rows.map(rowIndices => {
-        const cards = rowIndices.map(index => {
-          const fileName = getFileName(index);
-          return `
-            <div class="image-card" data-filename="${fileName}">
-              <div class="card-inner">
-                <img src="${GALLERY_CONFIG.thumbnailFolder}${fileName}" alt="" loading="lazy" decoding="async">
-              </div>
-            </div>
-          `;
-        }).join('');
-        return `
-          <div class="scroll-section">
-            <div class="scroll-container">
-              <div class="scroll-wrapper">${cards}${cards}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
+  <section class="archive" id="archive">
+    <div class="archive-head">
+      <h2 id="archive-title">Archive <span class="n" id="count" aria-label="361"></span></h2>
+      <div class="tools" role="group" aria-label="Order">
+        <button id="t-shuffle" aria-pressed="true">Shuffle</button>
+        <button id="t-first" aria-pressed="false">First</button>
+        <button id="t-last" aria-pressed="false">Latest</button>
+        <button id="t-random">Random</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
 
-      document.querySelectorAll('.scroll-wrapper').forEach((wrapper, i) => {
-        const { duration, direction } = ROW_ANIMATIONS[i % ROW_ANIMATIONS.length];
-        wrapper.style.cssText = `animation-duration: ${duration}; animation-direction: ${direction}`;
-      });
+  <section class="jail" id="jail">
+    <div>
+      <h2>Is cat<br>in <em>jail</em>?</h2>
+      <p>One verdict per visit</p>
+      <a class="go" href="iscatinjail.html" data-cursor="Go">Find out<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 6h10M6 1l5 5-5 5"/></svg></a>
+    </div>
+    <a class="win" href="iscatinjail.html" aria-hidden="true" tabindex="-1" id="jail-win"><div class="bars"></div></a>
+  </section>
+</main>
 
-      gallery.addEventListener('click', e => {
-        const card = e.target.closest('.image-card');
-        if (card) Modal.open(card.dataset.filename);
-      });
+<footer>
+  <div class="mark">iamaWildAnimal</div>
+  <div><a href="https://www.twitch.tv/iamawildanimal" target="_blank" rel="noopener">twitch.tv/iamawildanimal</a></div>
+  <div class="keys"><span><kbd>R</kbd> random</span><span><kbd>←</kbd><kbd>→</kbd> browse</span><span><kbd>Esc</kbd> close</span></div>
+  <div><span id="foot-count">361</span> screens</div>
+</footer>
 
-      gallery.querySelectorAll('img').forEach(img => {
-        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-        img.addEventListener('error', () => img.closest('.image-card').style.display = 'none', { once: true });
-      });
-
-      loading.style.display = 'none';
-      gallery.style.display = 'flex';
-    };
-
-    Modal.build();
-    renderGallery();
-    Modal.openFromHash();
-  </script>
+<dialog class="viewer" id="viewer" aria-label="Screen viewer">
+  <div class="amb" id="v-amb"><img id="v-amb-img" alt="" aria-hidden="true"></div>
+  <div class="stage" id="v-stage"><img id="v-img" alt="We'll Be Right Back screen"></div>
+  <button class="nav prev" id="v-prev" aria-label="Previous"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2 4 8l6 6"/></svg></button>
+  <button class="nav next" id="v-next" aria-label="Next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m6 2 6 6-6 6"/></svg></button>
+  <div class="ui">
+    <div>
+      <div class="cnt"><span id="v-num">000</span><small id="v-of">/ 361</small></div>
+      <div class="row">
+        <button id="v-link" aria-label="Copy link"><span>Link</span></button>
+        <button id="v-share" aria-label="Share" hidden><span>Share</span></button>
+        <a id="v-dl" download aria-label="Download"><span>Save</span></a>
+        <button id="v-close" aria-label="Close"><span>Close</span></button>
+      </div>
+    </div>
+    <div><span class="lbl" style="color:var(--mute)">Double tap to zoom</span><button id="v-rand"><span>Random</span></button></div>
+  </div>
+  <div class="toast" id="v-toast">Link copied</div>
+</dialog>
 </body>
 </html>
