@@ -1,159 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Is Cat in Jail?</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Courier New', monospace;
-        }
-        .title {
-            font-size: 36px;
-            color: #fff;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            height: 50px;
-        }
-        .image-window {
-            width: 960px;
-            height: 540px;
-            border: 4px solid #fff;
-            overflow: hidden;
-            margin-bottom: 30px;
-            background: #111;
-        }
-        .image-window img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            opacity: 0;
-            transition: opacity 0.2s ease-out;
-        }
-        .image-window img.loaded {
-            opacity: 1;
-        }
-        .text-container {
-            text-align: center;
-            color: #fff;
-            height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-        .message {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        .status {
-            font-size: 72px;
-            font-weight: bold;
-        }
-        .yes {
-            color: #f00;
-        }
-        @media (max-width: 1000px) {
-            .image-window {
-                width: 90vw;
-                height: 50.625vw;
-            }
-            .title {
-                font-size: 28px;
-                height: 40px;
-            }
-            .message {
-                font-size: 24px;
-            }
-            .status {
-                font-size: 48px;
-            }
-            .text-container {
-                height: 120px;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Is cat in jail?</title>
+<meta name="description" content="Is the cat in jail today? One verdict per visit.">
+<meta name="theme-color" content="#070707">
+<link rel="canonical" href="https://www.iamawildanimal.com/iscatinjail.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Is cat in jail?">
+<meta property="og:description" content="One verdict per visit.">
+<meta property="og:url" content="https://www.iamawildanimal.com/iscatinjail.html">
+<meta property="og:image" content="https://www.iamawildanimal.com/og-jail.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
-    <div class="title">Is Cat in Jail?</div>
-
-    <div class="image-window">
-        <img id="cat-img" src="" alt="Cat" loading="eager" decoding="async">
-    </div>
-
-    <div class="text-container">
-        <div class="message" id="cat-message"></div>
-        <div class="status" id="cat-status"></div>
-    </div>
-
-    <script>
-        (function () {
-            const CONFIG = {
-                jailCount: 5,
-                freeCount: 17,
-                jailPrefix: 'jail',
-                freePrefix: 'free',
-                imageExt: '.jpg',
-                imagesFolder: './jailimages/'
-            };
-
-            const generateImageList = (prefix, count) => {
-                return Array.from({ length: count }, (_, i) => 
-                    `${CONFIG.imagesFolder}${prefix}${i}${CONFIG.imageExt}`
-                );
-            };
-
-            const getRandomImage = (images) => {
-                const lastImage = sessionStorage.getItem('lastCatImage');
-                let imgPath;
-                
-                if (images.length === 1) {
-                    imgPath = images[0];
-                } else {
-                    do {
-                        imgPath = images[Math.floor(Math.random() * images.length)];
-                    } while (imgPath === lastImage);
-                }
-                
-                sessionStorage.setItem('lastCatImage', imgPath);
-                return imgPath;
-            };
-
-            const inJail = Math.random() < 0.5;
-            const images = inJail 
-                ? generateImageList(CONFIG.jailPrefix, CONFIG.jailCount)
-                : generateImageList(CONFIG.freePrefix, CONFIG.freeCount);
-            
-            const imgPath = getRandomImage(images);
-
-            const imgEl = document.getElementById('cat-img');
-            const msgEl = document.getElementById('cat-message');
-            const statusEl = document.getElementById('cat-status');
-
-            imgEl.addEventListener('load', () => imgEl.classList.add('loaded'), { once: true });
-
-            imgEl.src = imgPath;
-            imgEl.alt = `Cat ${inJail ? 'in jail' : 'is free'}`;
-
-            msgEl.textContent = inJail
-                ? 'Cat is in jail'
-                : 'No, but he probably should be.';
-
-            if (inJail) {
-                statusEl.textContent = 'YES';
-                statusEl.classList.add('yes');
-            } else {
-                statusEl.textContent = '';
-            }
-        })();
-    </script>
+<div class="grain" aria-hidden="true"></div>
+<header class="top">
+  <a class="mark" href="./">iamaWildAnimal</a>
+  <div class="clock" id="clock" aria-hidden="true">00:00:00</div>
+  <nav aria-label="Site">
+    <a href="./#archive">Archive</a>
+    <a href="https://www.twitch.tv/iamawildanimal" target="_blank" rel="noopener">Twitch<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 9 9 1M3 1h6v6"/></svg></a>
+  </nav>
+</header>
+<main class="jailpage">
+  <h1>Is cat in jail?</h1>
+  <div class="win" id="win"><canvas id="static" aria-hidden="true"></canvas><img id="cat" alt=""></div>
+  <div>
+    <div class="verdict" aria-live="polite"><span class="v" id="v"></span><div class="sub" id="sub"></div></div>
+    <div class="actions"><button id="again">Flip again <kbd aria-hidden="true">space</kbd></button></div>
+    <div class="stats" id="stats"></div>
+  </div>
+</main>
+<script>
+(() => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const JAIL = 5, FREE = 17;
+  const clock = document.getElementById('clock'); const tick = () => { const d = new Date(); clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(v => String(v).padStart(2, '0')).join(':'); }; tick(); setInterval(tick, 1000);
+  const win = document.getElementById('win'), cv = document.getElementById('static'), ctx = cv.getContext('2d'), img = document.getElementById('cat'), v = document.getElementById('v'), sub = document.getElementById('sub'), stats = document.getElementById('stats');
+  let flips = 0, jailed = 0, lastSrc = '', busy = false, raf = 0;
+  cv.width = 192; cv.height = 108;
+  const noise = () => { const d = ctx.createImageData(cv.width, cv.height), p = d.data; for (let i = 0; i < p.length; i += 4) { const g = 40 + Math.random() * 190; p[i] = p[i + 1] = p[i + 2] = g; p[i + 3] = 255; } ctx.putImageData(d, 0, 0); if (!RM) { const y = (performance.now() / 6) % cv.height; ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(0, y, cv.width, 6); } raf = requestAnimationFrame(noise); };
+  const pick = (prefix, n) => { let s; do s = `media/jail/${prefix}${Math.floor(Math.random() * n)}.webp`; while (s === lastSrc && n > 1); lastSrc = s; return s; };
+  const load = s => new Promise(r => { const im = new Image(); im.onload = () => r(s); im.onerror = () => r(s); im.src = s; });
+  async function flip() {
+    if (busy) return; busy = true;
+    const inJail = Math.random() < .5; const s = pick(inJail ? 'jail' : 'free', inJail ? JAIL : FREE);
+    v.className = 'v'; v.textContent = ''; sub.textContent = ''; img.classList.remove('on'); win.classList.remove('done'); cancelAnimationFrame(raf); noise();
+    const [src] = await Promise.all([load(s), new Promise(r => setTimeout(r, RM ? 150 : 700))]);
+    img.src = src; img.alt = inJail ? 'Cat in jail' : 'Cat, not in jail'; img.classList.add('on'); win.classList.add('done'); cancelAnimationFrame(raf);
+    v.textContent = inJail ? 'Yes' : 'No'; v.className = 'v in' + (inJail ? ' yes' : ''); sub.textContent = inJail ? '' : 'But he probably should be.';
+    flips++; if (inJail) jailed++; stats.innerHTML = flips > 1 ? `<b>${jailed}</b> jail · <b>${flips - jailed}</b> free · ${Math.round(jailed / flips * 100)}% jail rate` : '';
+    busy = false;
+  }
+  document.getElementById('again').addEventListener('click', flip);
+  addEventListener('keydown', e => { if (e.code === 'Space' || e.key === 'Enter' && e.target === document.body) { e.preventDefault(); flip(); } });
+  flip();
+})();
+</script>
 </body>
 </html>
