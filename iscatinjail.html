@@ -39,31 +39,6 @@
     <div class="stats" id="stats"></div>
   </div>
 </main>
-<script>
-(() => {
-  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const JAIL = 5, FREE = 17;
-  const clock = document.getElementById('clock'); const tick = () => { const d = new Date(); clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(v => String(v).padStart(2, '0')).join(':'); }; tick(); setInterval(tick, 1000);
-  const win = document.getElementById('win'), cv = document.getElementById('static'), ctx = cv.getContext('2d'), img = document.getElementById('cat'), v = document.getElementById('v'), sub = document.getElementById('sub'), stats = document.getElementById('stats');
-  let flips = 0, jailed = 0, lastSrc = '', busy = false, raf = 0;
-  cv.width = 192; cv.height = 108;
-  const noise = () => { const d = ctx.createImageData(cv.width, cv.height), p = d.data; for (let i = 0; i < p.length; i += 4) { const g = 40 + Math.random() * 190; p[i] = p[i + 1] = p[i + 2] = g; p[i + 3] = 255; } ctx.putImageData(d, 0, 0); if (!RM) { const y = (performance.now() / 6) % cv.height; ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(0, y, cv.width, 6); } raf = requestAnimationFrame(noise); };
-  const pick = (prefix, n) => { let s; do s = `media/jail/${prefix}${Math.floor(Math.random() * n)}.webp`; while (s === lastSrc && n > 1); lastSrc = s; return s; };
-  const load = s => new Promise(r => { const im = new Image(); im.onload = () => r(s); im.onerror = () => r(s); im.src = s; });
-  async function flip() {
-    if (busy) return; busy = true;
-    const inJail = Math.random() < .5; const s = pick(inJail ? 'jail' : 'free', inJail ? JAIL : FREE);
-    v.className = 'v'; v.textContent = ''; sub.textContent = ''; img.classList.remove('on'); win.classList.remove('done'); cancelAnimationFrame(raf); noise();
-    const [src] = await Promise.all([load(s), new Promise(r => setTimeout(r, RM ? 150 : 700))]);
-    img.src = src; img.alt = inJail ? 'Cat in jail' : 'Cat, not in jail'; img.classList.add('on'); win.classList.add('done'); cancelAnimationFrame(raf);
-    v.textContent = inJail ? 'Yes' : 'No'; v.className = 'v in' + (inJail ? ' yes' : ''); sub.textContent = inJail ? '' : 'But he probably should be.';
-    flips++; if (inJail) jailed++; stats.innerHTML = flips > 1 ? `<b>${jailed}</b> jail · <b>${flips - jailed}</b> free · ${Math.round(jailed / flips * 100)}% jail rate` : '';
-    busy = false;
-  }
-  document.getElementById('again').addEventListener('click', flip);
-  addEventListener('keydown', e => { if (e.code === 'Space' || e.key === 'Enter' && e.target === document.body) { e.preventDefault(); flip(); } });
-  flip();
-})();
-</script>
+<script>(()=>{const e=matchMedia("(prefers-reduced-motion: reduce)").matches,t=document.getElementById("clock"),n=()=>{const e=new Date;t.textContent=[e.getHours(),e.getMinutes(),e.getSeconds()].map(e=>String(e).padStart(2,"0")).join(":")};n(),setInterval(n,1e3);const a=document.getElementById("win"),o=document.getElementById("static"),c=o.getContext("2d"),d=document.getElementById("cat"),i=document.getElementById("v"),s=document.getElementById("sub"),r=document.getElementById("stats");let l=0,m=0,u="",g=!1,h=0;o.width=192,o.height=108;const y=()=>{const t=c.createImageData(o.width,o.height),n=t.data;for(let e=0;e<n.length;e+=4){const t=40+190*Math.random();n[e]=n[e+1]=n[e+2]=t,n[e+3]=255}if(c.putImageData(t,0,0),!e){const e=performance.now()/6%o.height;c.fillStyle="rgba(0,0,0,.35)",c.fillRect(0,e,o.width,6)}h=requestAnimationFrame(y)},w=e=>new Promise(t=>{const n=new Image;n.onload=()=>t(e),n.onerror=()=>t(e),n.src=e});async function f(){if(g)return;g=!0;const t=Math.random()<.5,n=((e,t)=>{let n;do{n=`media/jail/${e}${Math.floor(Math.random()*t)}.webp`}while(n===u&&t>1);return u=n,n})(t?"jail":"free",t?5:17);i.className="v",i.textContent="",s.textContent="",d.classList.remove("on"),a.classList.remove("done"),cancelAnimationFrame(h),y();const[o]=await Promise.all([w(n),new Promise(t=>setTimeout(t,e?150:700))]);d.src=o,d.alt=t?"Cat in jail":"Cat, not in jail",d.classList.add("on"),a.classList.add("done"),cancelAnimationFrame(h),i.textContent=t?"Yes":"No",i.className="v in"+(t?" yes":""),s.textContent=t?"":"But he probably should be.",l++,t&&m++,r.innerHTML=l>1?`<b>${m}</b> jail · <b>${l-m}</b> free · ${Math.round(m/l*100)}% jail rate`:"",g=!1}document.getElementById("again").addEventListener("click",f),addEventListener("keydown",e=>{("Space"===e.code||"Enter"===e.key&&e.target===document.body)&&(e.preventDefault(),f())}),f()})();</script>
 </body>
 </html>
